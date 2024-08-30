@@ -157,3 +157,25 @@ Another way is to set the TRACK parameters correctly. Again, we have prepared an
 </Project>
 ```
 
+**Microsoft.Cpp.Win32.Targets(62,5): error : Required file "" is missing**
+
+https://stackoverflow.com/questions/31324732/microsoft-cpp-win32-targets62-5-error-required-file-is-missing
+
+This fixed it for me:
+
+First, I had an error where it couldn't find the WindowSDKDir property. I had to go to my project's settings->Configuration Properties->General->Platform Toolset and change it to Windows7.1SDK.
+
+Then, I had the Required file "" is missing error. I had to open regedit and change:
+
+HKLM\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\CurrentInstallFolder
+
+from C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1\ to C:\Program Files\Microsoft SDKs\Windows\v7.1\ (removed (x86)).
+
+After that, CL.exe was exiting with code -1073741515. I had to add the following to my PATH:
+
+C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE
+
+After all that work, it turns out the project I'm building is using some include files that only come with Visual Studio 2010, so I have to go install the whole dang thing anyway.
+
+Hopefully this is of help to someone else, and I haven't just wasted my afternoon. :P
+
